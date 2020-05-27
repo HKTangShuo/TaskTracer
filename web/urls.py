@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
-
+import project as project
 from django.conf.urls import url, include
-from web.views import account
+from web.views import account, project
 from web.views import home
 
 
@@ -15,4 +15,5 @@ urlpatterns = [
     url(r'^logout/$', account.logout, name='logout'),
 
     url(r'^index/$', home.index, name='index'),
+    url(r'^project/list/$', project.project_list, name='project_list'),
 ]
