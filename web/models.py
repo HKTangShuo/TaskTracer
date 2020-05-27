@@ -7,7 +7,8 @@ class UserInfo(models.Model):
     mobile_phone = models.CharField(verbose_name='手机号', max_length=32)
     password = models.CharField(verbose_name='密码', max_length=32)
 
-
+    def __str__(self):
+        return self.username
 
 
 class PricePolicy(models.Model):
@@ -27,6 +28,9 @@ class PricePolicy(models.Model):
     per_file_size = models.PositiveIntegerField(verbose_name='单文件大小')
 
     create_datetime = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
+
+    def __str__(self):
+        return self.title
 
 
 class Transaction(models.Model):

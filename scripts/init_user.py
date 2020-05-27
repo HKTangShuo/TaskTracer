@@ -14,5 +14,5 @@ models.Transaction.objects.create(
     price_policy=policy_object,
     count=0,
     price=0,
-    start_datetime=datetime.datetime.now()
+    start_datetime=datetime.datetime.now(),
 )
