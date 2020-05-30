@@ -1,5 +1,5 @@
-from django.http import JsonResponse
-from django.shortcuts import render
+from django.http import JsonResponse, HttpResponse
+from django.shortcuts import render, redirect
 
 from web import models
 from web.forms.project import ProjectModelForm
@@ -13,7 +13,7 @@ def project_list(request):
         my_project_list = models.Project.objects.filter(creator=request.tracer.user)
         for row in my_project_list:
             if row.star:
-                project_dict['star'].append(row)
+                project_dict['star'].append({"value": row, 'type': 'my'})
             else:
                 project_dict['my'].append(row)
 
@@ -24,6 +24,7 @@ def project_list(request):
             else:
                 project_dict['join'].append(item.project)
         form = ProjectModelForm(request)
+
         return render(request, 'project_list.html', {'form': form, 'project_dict': project_dict})
 
     form = ProjectModelForm(request, data=request.POST)
@@ -35,3 +36,28 @@ def project_list(request):
         return JsonResponse({'status': True})
 
     return JsonResponse({'status': False, 'error': form.errors})
+
+
+def project_star(request, project_id, project_type):
+    if project_type == 'my':
+        models.Project.objects.filter(id=project_id, creator=request.tracer.user).update(star=True)
+        return redirect('project_list')
+
+    if project_type == 'join':
+        models.ProjectUser.objects.filter(project_id=project_id, user=request.tracer.user).update(star=True)
+        return redirect('project_list')
+
+    return HttpResponse('请求错误')
+
+
+def project_unstar(request, project_type, project_id):
+    """ 取消星标 """
+    if project_type == 'my':
+        models.Project.objects.filter(id=project_id, creator=request.tracer.user).update(star=False)
+        return redirect('project_list')
+
+    if project_type == 'join':
+        models.ProjectUser.objects.filter(project_id=project_id, user=request.tracer.user).update(star=False)
+        return redirect('project_list')
+
+    return HttpResponse('请求错误')

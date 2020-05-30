@@ -1,10 +1,11 @@
 {% extends 'layout/manage.html' %}
 {% block css %}
     <style>
-        .project{
+        .project {
             margin-top: 10px;
         }
-     .panel-body {
+
+        .panel-body {
             padding: 0;
             display: flex;
             flex-direction: row;
@@ -63,18 +64,18 @@
         <a class="btn btn-primary" data-toggle="modal" data-target="#addModal">
             <i class="fa fa-plus-circle" aria-hidden="true"></i> 新建项目
         </a>
-            <div class="panel panel-default">
+        <div class="panel panel-default">
             <div class="panel-heading"><i class="fa fa-star" aria-hidden="true"></i> 星标</div>
             <div class="panel-body">
                 {% for item in project_dict.star %}
                     <div class="item">
                         <a href="#" class="title"
-                           style="background-color: {{ item.get_color_display }};">{{ item.name }}</a>
+                           style="background-color: {{ item.value.get_color_display }};">{{ item.value.name }}</a>
                         <div class="info">
                             <div>
-                                <a href="#">
-                                    <i class="fa fa-star" aria-hidden="true" style="color: #f0ad4e;"></i>
-                                </a>
+                                <a href="{% url 'project_unstar' project_type=item.type project_id=item.value.id %}">
+
+                                    <i class="fa fa-star" aria-hidden="true" style="color: #f0ad4e;"></i></a>
                                 <span>{{ item.creator.username }}</span>
                             </div>
                             <div>
@@ -96,7 +97,7 @@
                            style="background-color: {{ item.get_color_display }};">{{ item.name }}</a>
                         <div class="info">
                             <div>
-                                <a href="#">
+                                <a href="{% url 'project_star' project_id=item.id  project_type='my'%}">
                                     <i class="fa fa-star" aria-hidden="true" style="color: #d5d5d5"></i>
                                 </a>
                                 <span>{{ item.creator.username }}</span>
@@ -113,15 +114,31 @@
 
         <div class="panel panel-default">
             <div class="panel-heading"><i class="fa fa-handshake-o" aria-hidden="true"></i> 我参与的</div>
-            <div class="panel-body">
+             <div class="panel-body">
                 {% for item in project_dict.join %}
                     <div>{{ item.name }}</div>
+                    <div class="item">
+                        <a href="#" class="title"
+                           style="background-color: {{ item.get_color_display }};">{{ item.name }}</a>
+                        <div class="info">
+                            <div>
+                                <a href="{% url 'project_star' project_type='join' project_id=item.id %}">
+                                    <i class="fa fa-star" aria-hidden="true" style="color: #d5d5d5"></i>
+                                </a>
+                                <span>{{ item.creator.username }}</span>
+                            </div>
+                            <div>
+                                <i class="fa fa-user-o" aria-hidden="true"></i>
+                                <span>{{ item.join_count }}</span>
+                            </div>
+                        </div>
+                    </div>
                 {% endfor %}
             </div>
         </div>
 
     </div>
- <!-- Modal -->
+    <!-- Modal -->
     <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">

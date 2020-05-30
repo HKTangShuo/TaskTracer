@@ -78,6 +78,9 @@ class Project(models.Model):
     creator = models.ForeignKey(verbose_name='创建者', to='UserInfo')
     create_datetime = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
 
+    def __str__(self):
+        return self.name
+
 
 class ProjectUser(models.Model):
     """ 项目参与者 """
