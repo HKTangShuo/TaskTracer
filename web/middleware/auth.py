@@ -12,6 +12,7 @@ class Tracer(object):
     def __init__(self):
         self.user = None
         self.price_policy = None
+        self.project = None
 
 
 class AuthMiddleware(MiddlewareMixin):
@@ -37,3 +38,23 @@ class AuthMiddleware(MiddlewareMixin):
             _object = models.Transaction.objects.filter(user=user_object, status=2, price_policy__category=1).first()
 
         request.tracer.price_policy = _object.price_policy
+
+    def process_view(self, request, callback, callback_args, callback_kwargs):
+        # url 是否以manage开头
+        if not request.path_info.startswith('/manage/'):
+            return
+
+        # project_id 是否是我的或者我参与的
+        project_id = callback_kwargs['project_id']
+        # 是否是我创建的
+        project_obj = models.Project.objects.filter(creator=request.tracer.user, id=project_id).first()
+        if project_obj:
+            request.tracer.project = project_obj
+            return
+        # 是否是我参与的
+        project_user_obj = models.ProjectUser.objects.filter(user=request.tracer.user, project_id=project_id).first()
+        if project_user_obj:
+            request.tracer.project = project_user_obj.project
+            return
+
+        return redirect('project_list')

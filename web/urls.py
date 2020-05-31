@@ -2,7 +2,7 @@
 # -*- coding:utf-8 -*-
 import project as project
 from django.conf.urls import url, include
-from web.views import account, project, manage
+from web.views import account, project, manage, wiki
 from web.views import home
 
 urlpatterns = [
@@ -24,7 +24,9 @@ urlpatterns = [
         url(r'^issues/$', manage.issues, name='issues'),
         url(r'^statistics/$', manage.statistics, name='statistics'),
         url(r'^file/$', manage.file, name='file'),
-        url(r'^wiki/$', manage.wiki, name='wiki'),
+        url(r'^wiki/$', wiki.wiki, name='wiki'),
+        url(r'^wiki/catalog/$', wiki.wiki_catalog, name='wiki_catalog'),
+        url(r'^wiki/add/$', wiki.wiki_add, name='wiki_add'),
         url(r'^setting/$', manage.setting, name='setting'),
     ], None, None)),
 

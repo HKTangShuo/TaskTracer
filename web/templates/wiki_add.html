@@ -12,15 +12,6 @@
             justify-content: space-between;
         }
 
-        .title-list ul {
-            padding-left: 15px;
-        }
-
-        .title-list ul a {
-            display: block;
-            padding: 5px 0;
-        }
-
         .panel-body {
             padding: 0;
         }
@@ -35,9 +26,17 @@
             min-height: 600px;
             margin-left: -1px;
         }
+        .title-list ul {
+            padding-left: 15px;
+        }
 
+        .title-list ul a {
+            display: block;
+            padding: 5px 0;
+        }
     </style>
 {% endblock %}
+
 {% block content %}
     <div class="container-fluid">
 
@@ -60,22 +59,20 @@
 
 
                     </ul>
-
                 </div>
                 <div class="col-sm-9 content">
-                    {% if wiki_object %}
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        {% for field in form %}
+                            <div class="form-group">
+                                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                {{ field }}
+                                <span class="error-msg">{{ field.errors.0 }}</span>
+                            </div>
+                        {% endfor %}
 
-                        {{ wiki_object.content }}
-
-                    {% else %}
-                        <div style="text-align: center;margin-top: 50px;">
-                            <h4> 《{{ request.tracer.project.name }}》wiki文档库 </h4>
-                            <a href="{% url 'wiki_add' project_id=request.tracer.project.id %}">
-                                <i class="fa fa-plus-circle" aria-hidden="true"></i> 新建文章
-                            </a>
-                        </div>
-                    {% endif %}
-
+                        <button type="submit" class="btn btn-primary">提 交</button>
+                    </form>
                 </div>
                 <div></div>
             </div>
