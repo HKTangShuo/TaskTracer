@@ -125,6 +125,21 @@ WHITE_REGEX_URL_LIST = [
     "/index/",
 ]
 
+TENCENT_SMS_APP_ID = 123123123123  # 自己应用ID
+TENCENT_SMS_APP_KEY = "xxxxxxxxxxxxxxxxxxxxxxx"  # 自己应用Key
+TENCENT_SMS_SIGN = "xxxxxxxxxxx"  # 自己腾讯云创建签名时填写的签名内容（使用公众号的话这个值一般是公众号全称或简称）
+TENCENT_SMS_TEMPLATE = {
+    'login': '571053',
+    'register': '571053',
+}
+# redis #
+CACHES = {
+
+}
+
+TENCENT_COS_ID = 'xxxxxxxx'
+TENCENT_COS_KEY = 'xxxxxxxx'
+
 try:
     from .local_settings import *
 except ImportError:

@@ -1,6 +1,8 @@
+from django.conf import settings
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 
+from utils.tencent.cos import create_bucket, create_bucket_name
 from web import models
 from web.forms.project import ProjectModelForm
 
@@ -29,6 +31,13 @@ def project_list(request):
 
     form = ProjectModelForm(request, data=request.POST)
     if form.is_valid():
+        # 为项目创建桶,名字不能重复
+        # 手机号+时间戳+后缀名
+        buckname = create_bucket_name(request, form.instance.name, settings.BUCKET_REGION)
+
+        create_bucket(buckname)
+        form.instance.region = settings.BUCKET_REGION
+        form.instance.bucket = buckname
         # 验证通过：项目名、颜色、描述 + creator谁创建的项目？
         form.instance.creator = request.tracer.user
         # 创建项目

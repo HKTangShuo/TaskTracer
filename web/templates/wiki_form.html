@@ -7,9 +7,11 @@
         .panel-default {
             margin-top: 10px;
         }
-        .editormd-fullscreen{
+
+        .editormd-fullscreen {
             z-index: 1001;
         }
+
         .panel-default .panel-heading {
             display: flex;
             flex-direction: row;
@@ -101,16 +103,21 @@
     </script>
     <script>
         var WIKI_DETAIL_URL = "{% url 'wiki' project_id=request.tracer.project.id %}";
+        var WIKI_upLoad_URL = "{% url 'wiki_upload' project_id=request.tracer.project.id %}"
         $(function () {
 
             initCatalog();
             initMDEditor();
         });
-        function  initMDEditor() {
-            editormd('editor',{
-                placeholder:'输入内容',
-                height:500,
-                path:"{% static 'plugin/markdown-md/lib/' %}"
+
+        function initMDEditor() {
+            editormd('editor', {
+                placeholder: '输入内容',
+                height: 500,
+                path:"{% static 'plugin/markdown-md/lib/' %}",
+                imageUpload: true,
+                imageFormats: ['jpg', 'jpeg', 'png', 'gif'],
+                imageUploadURL:WIKI_upLoad_URL
             })
         }
 

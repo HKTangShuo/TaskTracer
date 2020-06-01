@@ -1,7 +1,11 @@
+from django.conf import settings
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
 
+from utils.encrypt import uid
+from utils.tencent.cos import upload_file
 from web.forms.wiki import WikiModelForm
 from web.models import Wiki
 
@@ -74,3 +78,28 @@ def wiki_edit(request, project_id, wiki_id):
         return redirect(preview_url)
 
     return render(request, 'wiki_form.html', {'form': form})
+
+
+@csrf_exempt
+def upload(request, project_id):
+    result = {
+        'success': 0,
+        'message': None,
+        'url': None
+    }
+    img_obj = request.FILES.get('editormd-image-file')
+    if not img_obj:
+        result['message'] = '文件不存在'
+        return JsonResponse(result)
+    # 文件的对象上传到桶
+    bucket = request.tracer.project.bucket
+
+    body = img_obj
+    ext = img_obj.name.rsplit('.')[-1]
+    filename = '%s.%s' % (uid(request.tracer.user.mobile_phone), ext)
+
+    url = upload_file(bucket, body, filename)
+    result['success'] = 1
+    result['url'] = url
+
+    return JsonResponse(result)

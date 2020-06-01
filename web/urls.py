@@ -27,6 +27,7 @@ urlpatterns = [
         url(r'^wiki/$', wiki.wiki, name='wiki'),
         url(r'^wiki/delete/(?P<wiki_id>\d+)/$', wiki.wiki_delete, name='wiki_delete'),
         url(r'^wiki/edit/(?P<wiki_id>\d+)/$', wiki.wiki_edit, name='wiki_edit'),
+        url(r'^wiki/upload/$', wiki.upload, name='wiki_upload'),
 
         url(r'^wiki/catalog/$', wiki.wiki_catalog, name='wiki_catalog'),
         url(r'^wiki/add/$', wiki.wiki_add, name='wiki_add'),

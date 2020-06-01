@@ -17,3 +17,8 @@ CACHES = {
         }
     }
 }
+
+TENCENT_COS_ID = 'AKIDLl4C9vEFgx2vd98giXAdu1wfJm29QRlw'
+TENCENT_COS_KEY = 'Bk9NXnuBJGhy5ztdBcBYnpysWMUpunYB'
+BUCKET_REGION = 'ap-nanjing'
+TENCENT_COS_APPID = 1300971352
