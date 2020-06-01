@@ -1,11 +1,15 @@
 {% extends 'layout/manage.html' %}
+{% load static %}
 
 {% block css %}
+    <link rel="stylesheet" href="{% static 'plugin/markdown-md/css/editormd.min.css' %}">
     <style>
         .panel-default {
             margin-top: 10px;
         }
-
+        .editormd-fullscreen{
+            z-index: 1001;
+        }
         .panel-default .panel-heading {
             display: flex;
             flex-direction: row;
@@ -26,6 +30,7 @@
             min-height: 600px;
             margin-left: -1px;
         }
+
         .title-list ul {
             padding-left: 15px;
         }
@@ -64,11 +69,21 @@
                     <form method="post" novalidate>
                         {% csrf_token %}
                         {% for field in form %}
-                            <div class="form-group">
-                                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                                {{ field }}
-                                <span class="error-msg">{{ field.errors.0 }}</span>
-                            </div>
+                            {% if field.name == "content" %}
+                                <div class="form-group">
+                                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                    <div id="editor">
+                                        {{ field }}
+                                        <span class="error-msg">{{ field.errors.0 }}</span>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="form-group">
+                                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                    {{ field }}
+                                    <span class="error-msg">{{ field.errors.0 }}</span>
+                                </div>
+                            {% endif %}
                         {% endfor %}
 
                         <button type="submit" class="btn btn-primary">提 交</button>
@@ -81,13 +96,23 @@
     </div>
 {% endblock %}
 {% block js %}
+    <script src="{% static 'plugin/markdown-md/editormd.min.js' %}">
 
+    </script>
     <script>
         var WIKI_DETAIL_URL = "{% url 'wiki' project_id=request.tracer.project.id %}";
         $(function () {
 
             initCatalog();
+            initMDEditor();
         });
+        function  initMDEditor() {
+            editormd('editor',{
+                placeholder:'输入内容',
+                height:500,
+                path:"{% static 'plugin/markdown-md/lib/' %}"
+            })
+        }
 
         function initCatalog() {
             $.ajax({

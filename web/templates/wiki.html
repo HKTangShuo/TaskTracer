@@ -1,7 +1,10 @@
 {% extends 'layout/manage.html' %}
-
+{% load static %}
 {% block css %}
+    <link rel="stylesheet" href="{% static 'plugin/markdown-md/css/editormd.preview.min.css' %}">
+
     <style>
+
         .panel-default {
             margin-top: 10px;
         }
@@ -51,6 +54,16 @@
                        href="{% url 'wiki_add' project_id=request.tracer.project.id %}">
                         <i class="fa fa-plus-circle" aria-hidden="true"></i> 新建
                     </a>
+                    {% if wiki_object %}
+                        <a type="button" class="btn btn-primary btn-xs"
+                           href="{% url 'wiki_edit' project_id=request.tracer.project.id  wiki_id=wiki_object.id %}">
+                            <i class="fa fa-edit" aria-hidden="true"></i> 编辑
+                        </a>
+                        <a type="button" class="btn btn-danger btn-xs"
+                           href="{% url 'wiki_delete' project_id=request.tracer.project.id wiki_id=wiki_object.id %} ">
+                            <i class="fa fa-trash" aria-hidden="true"></i> 删除
+                        </a>
+                    {% endif %}
                 </div>
             </div>
             <div class="panel-body">
@@ -65,7 +78,9 @@
                 <div class="col-sm-9 content">
                     {% if wiki_object %}
 
-                        {{ wiki_object.content }}
+                        <div id="previewMarkdown">
+                            <textarea>{{ wiki_object.content }}</textarea>
+                        </div>
 
                     {% else %}
                         <div style="text-align: center;margin-top: 50px;">
@@ -84,13 +99,27 @@
     </div>
 {% endblock %}
 {% block js %}
-
+    <script src="{% static 'plugin/markdown-md/editormd.min.js' %}"></script>
+    <script src="{% static 'plugin/markdown-md/lib/marked.min.js' %}"></script>
+    <script src="{% static 'plugin/markdown-md/lib/prettify.min.js' %}"></script>
+    <script src="{% static 'plugin/markdown-md/lib/raphael.min.js' %}"></script>
+    <script src="{% static 'plugin/markdown-md/lib/underscore.min.js' %}"></script>
+    <script src="{% static 'plugin/markdown-md/lib/sequence-diagram.min.js' %}"></script>
+    <script src="{% static 'plugin/markdown-md/lib/flowchart.min.js' %}"></script>
+    <script src="{% static 'plugin/markdown-md/lib/jquery.flowchart.min.js' %}"></script>
     <script>
         var WIKI_DETAIL_URL = "{% url 'wiki' project_id=request.tracer.project.id %}";
         $(function () {
 
             initCatalog();
+            initPreivewMarkdown();
         });
+
+        function initPreivewMarkdown() {
+            editormd.markdownToHTML("previewMarkdown", {
+                htmlDecode: "style,script,iframe"
+            });
+        }
 
         function initCatalog() {
             $.ajax({
