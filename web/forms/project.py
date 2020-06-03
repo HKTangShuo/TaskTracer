@@ -1,6 +1,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 
+from utils.tencent.cos import create_bucket_name
 from web.forms.bootstrap import BootStrapForm
 from web import models
 from web.forms.widgets import ColorRadioSelect
