@@ -27,3 +27,19 @@ class FolderModelForm(BootStrapForm, forms.ModelForm):
     class Meta:
         model = models.FileRepository
         fields = ['name']
+
+
+class FileModelForm(forms.ModelForm):
+    etag = forms.CharField(label='ETag')
+
+    class Meta:
+        model = models.FileRepository
+        exclude = ['project', 'file_type', 'update_user', 'update_datetime']
+
+    def __init__(self, request, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.request = request
+
+    def clean_file_path(self):
+        return "https://{}".format(self.cleaned_data['file_path'])
+

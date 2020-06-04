@@ -133,4 +133,5 @@ def credential(bucket, region):
 
     sts = Sts(config)
     result_dict = sts.get_credential()
+
     return result_dict
